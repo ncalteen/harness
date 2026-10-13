@@ -6,7 +6,7 @@ export default defineConfig({
     tsconfigPaths: true
   },
   test: {
-    environment: 'node',
+    environment: 'jsdom',
     silent: 'passed-only',
     clearMocks: true,
     include: ['__tests__/**/*.test.{ts,tsx}'],

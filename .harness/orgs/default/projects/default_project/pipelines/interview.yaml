@@ -23,21 +23,21 @@ pipeline:
           name: Install Dependencies on Linux
           run:
             shell: bash
-            script: npx pnpm ci
+            script: npx "pnpm@$PNPM_VERSION" ci
         - name: CI Checks
           id: CI_Checks
           parallel:
             steps:
               - name: Formatting
                 run:
-                  script: npx pnpm run format:check
+                  script: npx "pnpm@$PNPM_VERSION" run format:check
                   shell: bash
                 id: Formatting
               - name: Unit Tests
                 run-test:
                   script: |-
                     mkdir -p coverage reports
-                    npx pnpm run test
+                    npx "pnpm@$PNPM_VERSION" run test
                   intelligence: { disabled: false }
                   shell: bash
                   report:
@@ -47,8 +47,8 @@ pipeline:
               - name: Playwright Tests
                 run:
                   script: |-
-                    npx pnpm run test:e2e:install
-                    npx pnpm run test:e2e
+                    npx "pnpm@$PNPM_VERSION" run test:e2e:install
+                    npx "pnpm@$PNPM_VERSION" run test:e2e
                   shell: bash
                 id: Playwright_Tests
         - name: Upload Coverage
@@ -62,6 +62,6 @@ pipeline:
           name: Build
           run:
             shell: bash
-            script: npx pnpm run build --if-present
+            script: npx "pnpm@$PNPM_VERSION" run build --if-present
       env:
         PNPM_VERSION: "12"

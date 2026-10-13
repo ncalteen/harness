@@ -1,85 +1,66 @@
 pipeline:
   name: Next.js App
-  identifier: nextjsapp
-  projectIdentifier: default
-  orgIdentifier: default
   tags: {}
   stages:
-    - stage:
-        name: Build and Test (Harness Cloud)
-        id: Build_and_Test_Harness_Cloud
-        description: Builds and tests the application using Harness Cloud
-        type: CI
-        env:
-          PNPM_VERSION: 12
-        spec:
-          cloneCodebase: true
-          cache:
-            enabled: true
-          platform:
-            os: Linux
-            arch: Amd64
-          runtime:
-            type: Cloud
-            spec: {}
-          execution:
+    - name: Build and Test (Harness Cloud)
+      id: Build_and_Test_Harness_Cloud
+      description: Builds and tests the application using Harness Cloud
+      env:
+        PNPM_VERSION: 12
+      clone:
+        enabled: true
+      cache:
+        enabled: true
+      steps:
+        - id: setupNode
+          name: Setup Node
+          template:
+            uses: setupNode@1.0.0
+        - id: install
+          name: Install Dependencies
+          run:
+            shell: bash
+            script: npx "pnpm@$PNPM_VERSION" ci
+        - parallel:
             steps:
-              - id: setupNode
-                name: Setup Node
-                template:
-                  uses: setupNode@1.0.0
-              - id: install
-                name: Install Dependencies
+              - name: Check Format
                 run:
+                  script: npx "pnpm@$PNPM_VERSION" run format:check
                   shell: bash
-                  script: npx "pnpm@$PNPM_VERSION" ci
-              - name: CI Checks
-                id: CI_Checks
-                parallel:
-                  steps:
-                    - name: Check Format
-                      run:
-                        script: npx "pnpm@$PNPM_VERSION" run format:check
-                        shell: bash
-                      id: Check_Format
-                    - name: Lint
-                      run:
-                        script: npx "pnpm@$PNPM_VERSION" run lint
-                        shell: bash
-                      id: Lint
-                    - name: Unit Tests
-                      run-test:
-                        script: |-
-                          mkdir -p coverage reports
-                          npx "pnpm@$PNPM_VERSION" run test
-                        intelligence: { disabled: false }
-                        shell: bash
-                        report:
-                          paths:
-                            - reports/**/*.xml
-                      id: Unit_Tests
-                    - name: Playwright Tests
-                      run:
-                        script: |-
-                          npx "pnpm@$PNPM_VERSION" run test:e2e:install
-                          npx "pnpm@$PNPM_VERSION" run test:e2e
-                        shell: bash
-                      id: Playwright_Tests
-              - name: Upload Coverage
+                id: Check_Format
+              - name: Lint
                 run:
-                  script: hcli cov upload
-                  env:
-                    CI_ENABLE_HCLI_FOR_TESTS: "true"
+                  script: npx "pnpm@$PNPM_VERSION" run lint
                   shell: bash
-                id: Upload_Coverage
-              - id: Build
-                name: Build
+                id: Lint
+              - name: Unit Tests
+                run-test:
+                  script: |-
+                    mkdir -p coverage reports
+                    npx "pnpm@$PNPM_VERSION" run test
+                  intelligence:
+                    disabled: false
+                  shell: bash
+                  report:
+                    paths:
+                      - reports/**/*.xml
+                id: Unit_Tests
+              - name: Playwright Tests
                 run:
+                  script: |-
+                    npx "pnpm@$PNPM_VERSION" run test:e2e:install
+                    npx "pnpm@$PNPM_VERSION" run test:e2e
                   shell: bash
-                  script: npx "pnpm@$PNPM_VERSION" run build
-  properties:
-    ci:
-      codebase:
-        connectorRef: interview
-        repoName: harness
-        build: <+input>
+                id: Playwright_Tests
+        - name: Upload Coverage
+          run:
+            script: hcli cov upload
+            env:
+              CI_ENABLE_HCLI_FOR_TESTS: "true"
+            shell: bash
+          id: Upload_Coverage
+        - id: Build
+          name: Build
+          run:
+            shell: bash
+            script: npx "pnpm@$PNPM_VERSION" run build

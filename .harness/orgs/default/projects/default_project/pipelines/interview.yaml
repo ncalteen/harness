@@ -24,27 +24,38 @@ pipeline:
           run:
             shell: bash
             script: pnpm ci
-        - id: buildLinux
-          name: Build on Linux
+        - name: CI Checks
+          id: CI_Checks
+          parallel:
+            steps:
+              - name: Formatting
+                run:
+                  script: pnpm run format:check
+                id: Formatting
+              - name: Unit Tests
+                run-test:
+                  script: |-
+                    mkdir -p coverage reports
+                    pnpm run test
+                    # Node's junit reporter emits testcase nodes directly under testsuites
+                    # with no testsuite wrapper; Harness's parser requires the nested form.
+                    sed -e 's#<testsuites>#<testsuites><testsuite name="node-test">#' -e 's#</testsuites>#</testsuite></testsuites>#' reports/junit-raw.xml > reports/junit.xml
+                  intelligence: {}
+                id: Unit_Tests
+              - name: Playwright Tests
+                run:
+                  script: |-
+                    pnpm run test:e2e:install
+                    pnpm run test:e2e
+                id: Playwright_Tests
+        - name: Upload Coverage
           run:
-            shell: bash
-            script: pnpm run build --if-present
-        - id: testLinux
-          name: Test on Linux
-          run-test:
-            shell: bash
-            script: |-
-              mkdir -p coverage reports
-              pnpx c8 --reporter=lcov --reports-dir=coverage node --test --test-reporter=spec --test-reporter-destination=stdout --test-reporter=junit --test-reporter-destination=reports/junit-raw.xml
-              # Node's junit reporter emits testcase nodes directly under testsuites
-              # with no testsuite wrapper; Harness's parser requires the nested form.
-              sed -e 's#<testsuites>#<testsuites><testsuite name="node-test">#' -e 's#</testsuites>#</testsuite></testsuites>#' reports/junit-raw.xml > reports/junit.xml
-            intelligence:
-              disabled: true
-        - id: coverage
-          name: Upload Coverage
-          run:
-            shell: bash
             script: hcli cov upload
             env:
               CI_ENABLE_HCLI_FOR_TESTS: "true"
+          id: Upload_Coverage
+        - id: Build
+          name: Build
+          run:
+            shell: bash
+            script: pnpm run build --if-present

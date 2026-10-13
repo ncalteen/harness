@@ -8,8 +8,8 @@ pipeline:
           id: Timestamp
       name: Init
       id: Init
-    - id: nodeNpmBuildTestHostedLinuxStage_1
-      name: Node npm Build and Test on Harness Cloud (Linux)
+    - id: Build_and_Test_Harness_Cloud
+      name: Build and Test (Harness Cloud)
       clone:
         enabled: true
       cache:

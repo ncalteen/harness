@@ -1,12 +1,12 @@
-import { render, screen } from "@testing-library/react";
-import { expect, test } from "vitest";
+import { render, screen } from '@testing-library/react'
+import { expect, test } from 'vitest'
 
-import Home from "@/app/page";
+import Home from '@/app/page'
 
-test("renders the home page heading", () => {
-  render(<Home />);
+test('renders the home page heading', () => {
+  render(<Home />)
 
   expect(
-    screen.getByRole("heading", { level: 1, name: /to get started/i }),
-  ).toBeDefined();
-});
+    screen.getByRole('heading', { level: 1, name: /to get started/i })
+  ).toBeDefined()
+})

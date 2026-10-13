@@ -27,3 +27,5 @@ lib/database.types.ts
 *.env*
 *.toml
 *.sh
+pnpm-lock.yaml
+.harness/

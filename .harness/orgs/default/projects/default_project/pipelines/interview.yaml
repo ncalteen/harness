@@ -1,0 +1,10 @@
+pipeline:
+  stages:
+    - steps:
+        - run:
+            script: echo "$(date +%T)"
+            shell: bash
+          name: Timestamp
+          id: Timestamp
+      name: Init
+      id: Init

@@ -63,3 +63,5 @@ pipeline:
           run:
             shell: bash
             script: npx pnpm run build --if-present
+      env:
+        PNPM_VERSION: "12"

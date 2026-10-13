@@ -19,30 +19,25 @@ pipeline:
           name: Setup Node
           template:
             uses: setupNode@1.0.0
-        - name: Install pnpm
-          run:
-            script: npm i -g pnpm
-            shell: bash
-          id: Install_pnpm
         - id: installDependenciesLinux
           name: Install Dependencies on Linux
           run:
             shell: bash
-            script: pnpm ci
+            script: npx pnpm ci
         - name: CI Checks
           id: CI_Checks
           parallel:
             steps:
               - name: Formatting
                 run:
-                  script: pnpm run format:check
+                  script: npx pnpm run format:check
                   shell: bash
                 id: Formatting
               - name: Unit Tests
                 run-test:
                   script: |-
                     mkdir -p coverage reports
-                    pnpm run test
+                    npx pnpm run test
                     # Node's junit reporter emits testcase nodes directly under testsuites
                     # with no testsuite wrapper; Harness's parser requires the nested form.
                     sed -e 's#<testsuites>#<testsuites><testsuite name="node-test">#' -e 's#</testsuites>#</testsuite></testsuites>#' reports/junit-raw.xml > reports/junit.xml
@@ -52,8 +47,8 @@ pipeline:
               - name: Playwright Tests
                 run:
                   script: |-
-                    pnpm run test:e2e:install
-                    pnpm run test:e2e
+                    npx pnpm run test:e2e:install
+                    npx pnpm run test:e2e
                   shell: bash
                 id: Playwright_Tests
         - name: Upload Coverage
@@ -67,4 +62,4 @@ pipeline:
           name: Build
           run:
             shell: bash
-            script: pnpm run build --if-present
+            script: npx pnpm run build --if-present

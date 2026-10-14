@@ -51,7 +51,6 @@ pipeline:
                   uses: runPlaywrightTests
                   with:
                     config_file: playwright.config.ts
-                    browser: chromium
                     report_junit_path: artifacts/junit.xml
                     headless: true
                     skip_browser_install: false

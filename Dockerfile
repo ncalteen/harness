@@ -14,6 +14,7 @@ RUN pnpm build
 
 FROM node:24-alpine AS runner
 WORKDIR /app
+LABEL org.opencontainers.image.source="https://github.com/ncalteen/harness"
 ENV NODE_ENV=production \
     NEXT_TELEMETRY_DISABLED=1 \
     HOSTNAME=0.0.0.0 \

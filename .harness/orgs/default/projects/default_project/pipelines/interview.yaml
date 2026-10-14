@@ -64,3 +64,13 @@ pipeline:
           run:
             shell: bash
             script: npx "pnpm@$PNPM_VERSION" run build
+        - name: Build and Push to GHCR
+          id: Build_and_Push_to_GHCR
+          build:
+            uses: buildAndPushToDocker
+            with:
+              connector: ghcr
+              repo: ghcr.io/ncalteen/harness
+              tags:
+                - <+pipeline.sequenceId>
+              caching: true

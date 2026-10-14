@@ -41,3 +41,25 @@ pnpm test
 The test command reports coverage through Vitest's V8 coverage provider (the
 supported successor to its c8 integration), writes LCOV output to
 `coverage/lcov.info`, and writes JUnit results to `reports/junit.xml`.
+
+Install Playwright's Chromium browser and run the end-to-end suite with:
+
+```bash
+pnpm test:e2e:install
+pnpm test:e2e
+```
+
+Playwright runs the UI tests in desktop and mobile Chromium profiles. Its HTML,
+JUnit, trace, screenshot, and video output is written under
+`reports/playwright/`.
+
+## Docker
+
+Build and run the production container:
+
+```bash
+docker build -t harness-next .
+docker run --rm -p 3000:3000 harness-next
+```
+
+Open [http://localhost:3000](http://localhost:3000) to view the application.

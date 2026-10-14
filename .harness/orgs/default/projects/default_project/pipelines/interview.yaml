@@ -78,3 +78,21 @@ pipeline:
               tags:
                 - <+pipeline.sequenceId>
               caching: true
+        - name: SBOM Orchestration
+          id: SBOM_Orchestration
+          template:
+            uses: sbomOrchestrationStep
+            with:
+              mode: generation
+              tool: Syft
+              format: spdx-json
+              source: third-party
+              provider: docker
+              container_registry: ghcr
+              image: ghcr.io/ncalteen/harness:<+pipeline.sequenceId>
+              attest: false
+              memory: 500Mi
+              cpu: "0.5"
+              loglevel: info
+              drift: true
+              driftmethod: last-generated

@@ -56,8 +56,8 @@ pipeline:
                     skip_browser_install: false
                     force_install: false
                     debug: false
-          name: Code Quality Check
-          id: Code_Quality_Check
+          name: Code Quality Checks
+          id: Code_Quality_Checks
         - name: Upload Coverage
           run:
             script: hcli cov upload

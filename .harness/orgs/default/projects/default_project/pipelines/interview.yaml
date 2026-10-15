@@ -116,9 +116,7 @@ pipeline:
                     memory: 500Mi
                     cpu: "0.5"
         - name: Publish Release
-          id: Publish_Release
           image: plugins/github-release
           settings:
             api_key:
               from_secret: github_pat
-            files: '*'

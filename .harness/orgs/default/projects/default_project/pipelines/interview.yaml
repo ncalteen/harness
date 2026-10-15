@@ -116,7 +116,12 @@ pipeline:
                     memory: 500Mi
                     cpu: "0.5"
         - name: Publish Release
-          image: plugins/github-release
-          settings:
-            api_key:
-              from_secret: github_pat
+          identifier: Publish_Release
+          spec:
+            connectorRef: account.docker
+            image: plugins/github-release
+            type: Plugin
+            settings:
+              api_key:
+                from_secret: github_pat
+              files: '*'

@@ -120,10 +120,10 @@ pipeline:
             name: Publish Release
             identifier: Publish_Release
             spec:
-              connectorRef: docker
-              image: plugins/github-release:latest
-              settings:
-                api_key: <+secrets.github_pat>
-                owner: ncalteen
-                repo: harness
-                files: '*'
+              connectorRef: account.docker
+              image: plugins/github-release
+              # settings:
+              #   api_key: <+secrets.github_pat>
+              #   owner: ncalteen
+              #   repo: harness
+              #   files: '*'

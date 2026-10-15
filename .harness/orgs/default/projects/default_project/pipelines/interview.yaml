@@ -124,12 +124,15 @@ pipeline:
       environment:
         items:
           - id: dev
-            deploy-to: infrastructure_kubernetes_ff20
+            deploy-to: <+input>
+            all-infra: true
       steps:
         - name: Kubernetes Rolling Deploy
           id: k8sRollingDeployStep
           template:
             uses: k8sRollingDeployStep
+            with:
+              pruning: true
       rollback:
         - group:
             steps:

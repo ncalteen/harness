@@ -116,9 +116,9 @@ pipeline:
                     memory: 500Mi
                     cpu: "0.5"
         - step:
+            type: Plugin
             name: Publish Release
             identifier: Publish_Release
-            type: Plugin
             spec:
               connectorRef: docker
               image: plugins/github-release
@@ -126,6 +126,4 @@ pipeline:
                 api_key: <+secrets.getValue("github_pat")>
                 owner: ncalteen
                 repo: harness
-                tag: <+codebase.tag>
-                files:
-                  - '*'
+                files: '*'

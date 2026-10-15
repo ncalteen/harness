@@ -115,3 +115,14 @@ pipeline:
                     cloned_codebase: /harness
                     memory: 500Mi
                     cpu: "0.5"
+        - identifier: Publish_Release
+          name: Publish Release
+          spec:
+            connectorRef: interview
+            image: plugins/github-release
+            type: Plugin
+            settings:
+              api_key:
+                from_secret: github_pat
+              files: '*'
+              title: Release <+pipeline.sequenceId>

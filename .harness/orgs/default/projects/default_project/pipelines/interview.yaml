@@ -117,7 +117,4 @@ pipeline:
                     cpu: "0.5"
         - name: Publish Release
           id: Publish_Release
-          spec:
-            connectorRef: interview
-            image: plugins/github-release
-            type: Plugin
+          image: plugins/github-release

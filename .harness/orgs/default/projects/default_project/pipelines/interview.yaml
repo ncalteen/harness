@@ -120,7 +120,7 @@ pipeline:
             name: Publish Release
             identifier: Publish_Release
             spec:
-              connectorRef: account.docker
+              connectorRef: docker
               image: plugins/github-release
               settings:
                 api_key: <+secrets.getValue("github_pat")>

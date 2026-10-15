@@ -123,7 +123,7 @@ pipeline:
               connectorRef: account.docker
               image: plugins/github-release
               settings:
-                api_key: <+secrets.github_pat>
+                api_key: <+secrets.getValue("github_pat")>
                 owner: ncalteen
                 repo: harness
                 files: '*'

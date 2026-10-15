@@ -117,11 +117,10 @@ pipeline:
                     cpu: "0.5"
         - name: Publish Release
           identifier: Publish_Release
-          spec:
-            connectorRef: account.docker
-            image: plugins/github-release
-            type: Plugin
-            settings:
-              api_key:
-                from_secret: github_pat
-              files: '*'
+          type: Plugin
+          connectorRef: docker
+          image: plugins/github-release
+          settings:
+            api_key:
+              from_secret: github_pat
+            files: '*'

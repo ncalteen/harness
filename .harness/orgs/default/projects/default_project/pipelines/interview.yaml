@@ -115,15 +115,14 @@ pipeline:
                     cloned_codebase: /harness
                     memory: 500Mi
                     cpu: "0.5"
-        - step:
-            type: Plugin
-            name: Publish Release
-            identifier: Publish_Release
-            spec:
-              connectorRef: ghcr
-              image: plugins/github-release
-              # settings:
-              #   api_key: <+secrets.github_pat>
-              #   owner: ncalteen
-              #   repo: harness
-              #   files: '*'
+        - type: Plugin
+          name: Publish Release
+          identifier: Publish_Release
+          spec:
+            connectorRef: ghcr
+            image: plugins/github-release
+            # settings:
+            #   api_key: <+secrets.github_pat>
+            #   owner: ncalteen
+            #   repo: harness
+            #   files: '*'

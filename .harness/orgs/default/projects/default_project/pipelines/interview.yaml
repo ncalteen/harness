@@ -115,3 +115,32 @@ pipeline:
                     cloned_codebase: /harness
                     memory: 500Mi
                     cpu: "0.5"
+    - name: Deploy to Minikube
+      id: Deploy_to_Minikube
+      service:
+        type: kubernetes
+        items:
+          - service
+      environment:
+        items:
+          - id: dev
+            all-infra: true
+            deploy-to: <+input>
+      steps:
+        - name: Kubernetes Rolling Deploy
+          id: k8sRollingDeployStep
+          template:
+            uses: k8sRollingDeployStep
+      rollback:
+        - group:
+            steps:
+              - name: Kubernetes Rolling Rollback
+                id: k8sRollingRollbackStep
+                template:
+                  uses: k8sRollingRollbackStep
+          id: k8sRollingRollback
+          name: Kubernetes Rolling Rollback
+      on-failure:
+        errors: all
+        action: stage-rollback
+      runtime: cloud

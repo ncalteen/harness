@@ -115,12 +115,17 @@ pipeline:
                     cloned_codebase: /harness
                     memory: 500Mi
                     cpu: "0.5"
-        - name: Publish Release
-          identifier: Publish_Release
-          type: Plugin
-          connectorRef: docker
-          image: plugins/github-release
-          settings:
-            api_key:
-              from_secret: github_pat
-            files: '*'
+        - step:
+            name: Publish Release
+            identifier: Publish_Release
+            type: Plugin
+            spec:
+              connectorRef: docker
+              image: plugins/github-release
+              settings:
+                api_key: <+secrets.getValue("github_pat")>
+                owner: ncalteen
+                repo: harness
+                tag: <+codebase.tag>
+                files:
+                  - '*'

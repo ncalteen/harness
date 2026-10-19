@@ -63,3 +63,23 @@ docker run --rm -p 3000:3000 harness-next
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to view the application.
+
+## Kubernetes deployment
+
+The
+[Harness pipeline](.harness/orgs/default/projects/default_project/pipelines/interview.yaml)
+publishes `ghcr.io/ncalteen/harness:<+pipeline.sequenceId>` and
+`ghcr.io/ncalteen/harness:latest` and then runs a rolling deployment through the
+`harness_service` Harness service. Configure that service to load
+[the Kubernetes manifest](kubernetes/service/manifest.yaml) from the branch
+containing these changes. Harness resolves `<+pipeline.sequenceId>` in the
+manifest to deploy the image published by the same pipeline execution.
+
+The container listens on port `3000`. The LoadBalancer Service exposes it at
+[http://localhost:8080](http://localhost:8080) on Docker Desktop.
+
+The manifest contains a Harness expression and must be rendered before applying
+it directly with `kubectl`. If the GHCR package is private, configure an
+`imagePullSecret` in the deployment namespace and reference it from the pod
+specification; the pipeline's GHCR connector does not authenticate Kubernetes
+image pulls.

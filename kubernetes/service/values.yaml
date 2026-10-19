@@ -1,2 +1,2 @@
 name: hello-app
-image: <+artifacts.primary.image>
+image: ghcr.io/ncalteen/harness:latest

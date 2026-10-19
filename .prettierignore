@@ -31,3 +31,4 @@ pnpm-lock.yaml
 .harness/
 playwright.harness.config.ts
 playwright.harness.resolve.ts
+kubernetes/service/

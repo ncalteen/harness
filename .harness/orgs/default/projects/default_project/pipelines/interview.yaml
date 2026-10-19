@@ -56,8 +56,6 @@ pipeline:
                     skip_browser_install: false
                     force_install: false
                     debug: false
-          name: Code Quality Checks
-          id: Code_Quality_Checks
         - name: Upload Coverage
           run:
             script: hcli cov upload
@@ -79,11 +77,9 @@ pipeline:
               repo: ghcr.io/ncalteen/harness
               tags:
                 - <+pipeline.sequenceId>
-              build_mode: "${{inputs.build_mode}}"
+              build_mode: build_and_push
               caching: true
-        - name: BOM Orchestration
-          id: BOM_Orchestration
-          parallel:
+        - parallel:
             steps:
               - name: Generate SBOM
                 id: Generate_SBOM
@@ -123,14 +119,6 @@ pipeline:
       service:
         items:
           - id: harness_service
-            with:
-              overlay:
-                type: Kubernetes
-                spec:
-                  artifacts:
-                    primary:
-                      primaryArtifactRef: <+input>
-                      sources: <+input>
         type: kubernetes
       environment:
         items:
@@ -158,21 +146,3 @@ pipeline:
           namespace: harness-delegate-ng
           connector: local_kubernetes_connector
         delegate: local-kubernetes-delegate
-  inputs:
-    build_mode:
-      type: string
-      label: Build Mode
-      default: build_and_push
-      required: true
-      options:
-        - build_and_push
-        - build_only
-        - push_only
-      ui:
-        component: select
-        visible: "${{values.caching == false}}"
-        tooltip: Select the build mode. Build and Push builds and pushes to registry.
-          Build Only exports to tarball. Push Only pushes an existing image or tarball.
-        allowedValueTypes:
-          - fixed
-          - runtime

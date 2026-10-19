@@ -12,6 +12,14 @@ export default function Home() {
           height={20}
           priority
         />
+        <Image
+          className="mt-8 h-auto w-64 max-w-full self-center"
+          src="/donut.png"
+          alt="Donut"
+          width={756}
+          height={936}
+          sizes="256px"
+        />
         <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
           <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
             To get started, edit the{' '}

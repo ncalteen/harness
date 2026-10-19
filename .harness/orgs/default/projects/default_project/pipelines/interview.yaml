@@ -115,8 +115,8 @@ pipeline:
                     cloned_codebase: /harness
                     memory: 500Mi
                     cpu: "0.5"
-    - name: Deploy Kubernetes_60d5
-      id: Deploy_Kubernetes_60d5
+    - name: Deploy Kubernetes
+      id: Deploy_Kubernetes
       service:
         type: kubernetes
         items:
@@ -145,5 +145,5 @@ pipeline:
       runtime:
         kubernetes:
           namespace: harness-delegate-ng
-          connector: connector_K8sCluster_8fc4
-      delegate: harness-delegate
+          connector: local_kubernetes_connector
+        delegate: local-kubernetes-delegate

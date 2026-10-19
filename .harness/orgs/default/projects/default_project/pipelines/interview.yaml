@@ -79,6 +79,7 @@ pipeline:
               repo: ghcr.io/ncalteen/harness
               tags:
                 - <+pipeline.sequenceId>
+              build_mode: "${{inputs.build_mode}}"
               caching: true
         - name: BOM Orchestration
           id: BOM_Orchestration
@@ -117,11 +118,20 @@ pipeline:
                     cpu: "0.5"
     - name: Deploy Kubernetes
       id: Deploy_Kubernetes
-      description: Deploys the GHCR image tagged with this pipeline's sequence ID via the Kubernetes manifest.
+      description: Deploys the GHCR image tagged with this pipeline's sequence ID
+        via the Kubernetes manifest.
       service:
-        type: kubernetes
         items:
-          - harness_service
+          - id: harness_service
+            with:
+              overlay:
+                type: Kubernetes
+                spec:
+                  artifacts:
+                    primary:
+                      primaryArtifactRef: <+input>
+                      sources: <+input>
+        type: kubernetes
       environment:
         items:
           - id: dev
@@ -148,3 +158,21 @@ pipeline:
           namespace: harness-delegate-ng
           connector: local_kubernetes_connector
         delegate: local-kubernetes-delegate
+  inputs:
+    build_mode:
+      type: string
+      label: Build Mode
+      default: build_and_push
+      required: true
+      options:
+        - build_and_push
+        - build_only
+        - push_only
+      ui:
+        component: select
+        visible: "${{values.caching == false}}"
+        tooltip: Select the build mode. Build and Push builds and pushes to registry.
+          Build Only exports to tarball. Push Only pushes an existing image or tarball.
+        allowedValueTypes:
+          - fixed
+          - runtime

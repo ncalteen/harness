@@ -1,3 +1,15 @@
+{{- if .Values.dockercfg}}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{.Values.name}}-dockercfg
+  annotations:
+    harness.io/skip-versioning: true
+data:
+  .dockercfg: {{.Values.dockercfg}}
+type: kubernetes.io/dockercfg
+---
+{{- end}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -13,9 +25,13 @@ spec:
       labels:
         app: hello-app
     spec:
+      {{- if .Values.dockercfg}}
+      imagePullSecrets:
+      - name: {{.Values.name}}-dockercfg
+      {{- end}}
       containers:
         - name: hello-app
-          image: ghcr.io/ncalteen/harness:<+pipeline.sequenceId>
+          image: ${{ .Values.image }}
           ports:
             - containerPort: 3000
 ---

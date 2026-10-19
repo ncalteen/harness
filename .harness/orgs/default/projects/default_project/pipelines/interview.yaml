@@ -74,7 +74,7 @@ pipeline:
             uses: buildAndPushToDocker
             with:
               connector: ghcr
-              repo: ncalteen/harness
+              repo: ghcr.io/ncalteen/harness
               tags:
                 - <+pipeline.sequenceId>
                 - latest

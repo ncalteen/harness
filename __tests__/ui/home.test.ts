@@ -23,7 +23,7 @@ test('renders the home page and its primary links', async ({ page }) => {
 
   const donutBounds = await donut.boundingBox()
   const logoBounds = await page
-    .getByRole('img', { name: 'Vercel logomark' })
+    .getByRole('img', { name: 'Next.js logo', exact: true })
     .boundingBox()
   const mainBounds = await page.getByRole('main').boundingBox()
 

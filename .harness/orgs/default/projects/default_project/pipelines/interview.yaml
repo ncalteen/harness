@@ -88,20 +88,17 @@ pipeline:
                   uses: sbomOrchestrationStep
                   with:
                     mode: generation
-                    tool: cdxgen
-                    source: third-party
-                    provider: docker
-                    container_registry: ghcr
-                    image: ghcr.io/ncalteen/harness:<+pipeline.sequenceId>
-                    attest: true
-                    attest_type: Keyless
-                    keyless_type: harness
+                    tool: Syft
+                    source: repository
                     drift: true
-                    driftmethod: last-generated
                     memory: 500Mi
                     cpu: "0.5"
                     loglevel: info
-                    cdxgen_format: cyclonedx-json
+                    format: spdx-json
+                    repourl: https://github.com/ncalteen/harness
+                    sourcepath: Dockerfile
+                    repobranch: main
+                    drift_branch: main
               - name: Generate AIBOM
                 id: Generate_AIBOM
                 template:

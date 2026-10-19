@@ -1,3 +1,2 @@
 name: hello-app
 image: <+artifacts.primary.image>
-dockercfg: <+artifacts.primary.imagePullSecret>

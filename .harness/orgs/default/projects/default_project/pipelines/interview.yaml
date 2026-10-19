@@ -117,6 +117,7 @@ pipeline:
                     cpu: "0.5"
     - name: Deploy Kubernetes
       id: Deploy_Kubernetes
+      description: Deploys the GHCR image tagged with this pipeline's sequence ID via the Kubernetes manifest.
       service:
         type: kubernetes
         items:

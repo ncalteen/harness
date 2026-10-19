@@ -79,7 +79,7 @@ pipeline:
                 - <+pipeline.sequenceId>
                 - latest
               caching: true
-              platform: linux/arm64, linux/amd64
+              platform: linux/arm64
         - parallel:
             steps:
               - name: Generate SBOM
@@ -88,8 +88,7 @@ pipeline:
                   uses: sbomOrchestrationStep
                   with:
                     mode: generation
-                    tool: Syft
-                    format: spdx-json
+                    tool: cdxgen
                     source: third-party
                     provider: docker
                     container_registry: ghcr
@@ -102,6 +101,7 @@ pipeline:
                     memory: 500Mi
                     cpu: "0.5"
                     loglevel: info
+                    cdxgen_format: cyclonedx-json
               - name: Generate AIBOM
                 id: Generate_AIBOM
                 template:

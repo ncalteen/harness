@@ -12,7 +12,10 @@ const eslintConfig = defineConfig([
     'build/**',
     'coverage/**',
     'reports/**',
-    'next-env.d.ts'
+    'next-env.d.ts',
+    'playwright.harness.config.ts',
+    'playwright.harness.resolve.ts',
+    'kubernetes/service/**'
   ])
 ])
 

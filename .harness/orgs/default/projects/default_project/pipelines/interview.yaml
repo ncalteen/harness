@@ -110,37 +110,43 @@ pipeline:
                     cloned_codebase: /harness
                     memory: 500Mi
                     cpu: "0.5"
-    - name: Deploy Kubernetes
-      id: Deploy_Kubernetes
-      description: Deploys the GHCR image tagged with this pipeline's sequence ID via
-        the Kubernetes manifest.
+    - name: Deploy
+      id: Deploy
       service:
+        type: kubernetes
         items:
           - harness_service
-        type: kubernetes
       environment:
         items:
           - id: dev
             deploy-to: local_cluster
       steps:
-        - name: Kubernetes Rolling Deploy
-          id: k8sRollingDeployStep
+        - name: Kubernetes Blue Green Deploy
+          id: k8sBlueGreenDeployStep
           template:
-            uses: k8sRollingDeployStep
+            uses: k8sBlueGreenDeployStep
+        - name: Kubernetes Blue Green Swap Services Selectors
+          id: k8sBlueGreenSwapServicesSelectorsStep
+          template:
+            uses: k8sBlueGreenSwapServicesSelectorsStep
+            with:
+              stable_service: ${{stage.steps.k8sBlueGreenDeployStep.output.outputVariables.stableService}}
+              stage_service: ${{stage.steps.k8sBlueGreenDeployStep.output.outputVariables.stageService}}
+              is_openshift: ${{stage.steps.k8sBlueGreenDeployStep.output.outputVariables.isOpenshift}}
       rollback:
         - group:
             steps:
-              - name: Kubernetes Rolling Rollback
-                id: k8sRollingRollbackStep
+              - name: Kubernetes Blue Green Rollback Swap Services Selectors
+                id: k8sBlueGreenRollbackSwapServicesSelectorsStep
                 template:
-                  uses: k8sRollingRollbackStep
-          id: k8sRollingRollback
-          name: Kubernetes Rolling Rollback
+                  uses: k8sBlueGreenSwapServicesSelectorsStep
+                  with:
+                    stable_service: ${{rollback.data.PLUGIN_STABLE_SERVICE}}
+                    stage_service: ${{rollback.data.PLUGIN_STAGE_SERVICE}}
+                    is_openshift: ${{rollback.data.HARNESS_IS_OPENSHIFT}}
+          id: k8sBlueGreenRollback
+          name: Kubernetes Blue Green Rollback
       on-failure:
         errors: all
         action: stage-rollback
-      runtime:
-        kubernetes:
-          namespace: harness-delegate-ng
-          connector: local_kubernetes_connector
-        delegate: local-kubernetes-delegate
+      runtime: cloud

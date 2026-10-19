@@ -79,7 +79,7 @@ pipeline:
                 - <+pipeline.sequenceId>
                 - latest
               caching: true
-              platform: linux/arm64
+              platform: linux/arm64, linux/amd64
         - parallel:
             steps:
               - name: Generate SBOM

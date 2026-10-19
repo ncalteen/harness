@@ -29,3 +29,5 @@ lib/database.types.ts
 *.sh
 pnpm-lock.yaml
 .harness/
+playwright.harness.config.ts
+playwright.harness.resolve.ts

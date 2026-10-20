@@ -17,7 +17,7 @@ spec:
         - name: ghcr-pull-secret
       containers:
         - name: hello-app
-          image: ghcr.io/ncalteen/harness:latest
+          image: ghcr.io/ncalteen/harness:<+pipeline.sequenceId>
           ports:
             - containerPort: 3000
 ---

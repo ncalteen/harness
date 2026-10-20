@@ -151,5 +151,5 @@ pipeline:
         action: stage-rollback
       runtime:
         kubernetes:
-          namespace: harness-delegate-ns
+          namespace: harness-delegate-ng
           connector: local_kubernetes_connector

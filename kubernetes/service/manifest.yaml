@@ -25,8 +25,24 @@ apiVersion: v1
 kind: Service
 metadata:
   name: hello-app
+  annotations:
+    harness.io/primary-service: "true"
 spec:
   type: LoadBalancer
+  selector:
+    app: hello-app
+  ports:
+    - port: 8080
+      targetPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-app-stage
+  annotations:
+    harness.io/stage-service: "true"
+spec:
+  type: ClusterIP
   selector:
     app: hello-app
   ports:

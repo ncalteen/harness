@@ -26,7 +26,7 @@ export default function Home() {
             <code className="rounded bg-black/6 px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/8">
               page.tsx
             </code>{' '}
-            file AAAAAAAAAAAAAAAAAAAAAAAA.
+            file.
           </h1>
           <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
             Looking for a starting point or more instructions? Head over to{' '}

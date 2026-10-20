@@ -45,6 +45,11 @@ pipeline:
                     paths:
                       - reports/**/*.xml
                 id: Unit_Tests
+              - id: Build
+                name: Build
+                run:
+                  shell: bash
+                  script: npx "pnpm@$PNPM_VERSION" run build
               - name: Playwright Tests
                 id: Playwright_Tests
                 build:
@@ -63,11 +68,6 @@ pipeline:
               CI_ENABLE_HCLI_FOR_TESTS: "true"
             shell: bash
           id: Upload_Coverage
-        - id: Build
-          name: Build
-          run:
-            shell: bash
-            script: npx "pnpm@$PNPM_VERSION" run build
         - name: Build and Push to GHCR
           id: Build_and_Push_to_GHCR
           build:
@@ -121,31 +121,19 @@ pipeline:
           - id: dev
             deploy-to: local_cluster
       steps:
-        - name: Kubernetes Blue Green Deploy
-          id: k8sBlueGreenDeployStep
+        - name: Kubernetes Rolling Deploy
+          id: k8sRollingDeployStep
           template:
-            uses: k8sBlueGreenDeployStep
-        - name: Kubernetes Blue Green Swap Services Selectors
-          id: k8sBlueGreenSwapServicesSelectorsStep
-          template:
-            uses: k8sBlueGreenSwapServicesSelectorsStep
-            with:
-              stable_service: ${{stage.steps.k8sBlueGreenDeployStep.output.outputVariables.stableService}}
-              stage_service: ${{stage.steps.k8sBlueGreenDeployStep.output.outputVariables.stageService}}
-              is_openshift: ${{stage.steps.k8sBlueGreenDeployStep.output.outputVariables.isOpenshift}}
+            uses: k8sRollingDeployStep
       rollback:
         - group:
             steps:
-              - name: Kubernetes Blue Green Rollback Swap Services Selectors
-                id: k8sBlueGreenRollbackSwapServicesSelectorsStep
+              - name: Kubernetes Rolling Rollback
+                id: k8sRollingRollbackStep
                 template:
-                  uses: k8sBlueGreenSwapServicesSelectorsStep
-                  with:
-                    stable_service: ${{rollback.data.PLUGIN_STABLE_SERVICE}}
-                    stage_service: ${{rollback.data.PLUGIN_STAGE_SERVICE}}
-                    is_openshift: ${{rollback.data.HARNESS_IS_OPENSHIFT}}
-          id: k8sBlueGreenRollback
-          name: Kubernetes Blue Green Rollback
+                  uses: k8sRollingRollbackStep
+          id: k8sRollingRollback
+          name: Kubernetes Rolling Rollback
       on-failure:
         errors: all
         action: stage-rollback

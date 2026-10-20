@@ -149,4 +149,7 @@ pipeline:
       on-failure:
         errors: all
         action: stage-rollback
-      runtime: cloud
+      runtime:
+        kubernetes:
+          namespace: harness-delegate-ns
+          connector: local_kubernetes_connector
